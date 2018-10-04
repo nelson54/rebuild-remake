@@ -1,0 +1,18 @@
+{
+  "buildings": [
+    {
+      "type": "house",
+      "priority": 200,
+      "frequency": 0.1,
+      "size": 1,
+      "maxFood": 5
+    },
+    {
+      "type": "farm",
+      "priority": 100,
+      "frequency": 0.05,
+      "size": 1,
+      "maxFood": 1
+    }
+  ]
+}

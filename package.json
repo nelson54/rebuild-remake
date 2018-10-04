@@ -1,0 +1,14 @@
+{
+  "name": "4x-game-library",
+  "version": "1.0.0",
+  "description": "Building Characteristics\r * Food\r * Housing\r * Security",
+  "main": "src/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "browserify": "^16.2.3"
+  }
+}
