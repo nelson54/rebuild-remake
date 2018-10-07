@@ -5,7 +5,7 @@ const ZombieMovementSystem = require('./zombie-movement-system');
 const ZombieDeathSystem = require('./zombie-death-system');
 const SkillSystem = require('./skill-system');
 const AdditionalSurvivorSystem = require('./additional-survivor-system');
-
+const SurvivorInfoSystem = require('./survivor-info-system');
 /**
  * Prepares game systems
  *
@@ -31,7 +31,8 @@ module.exports = class SystemLoader {
             new ZombieDeathSystem(),
             new ZombieMovementSystem(),
             new SkillSystem(),
-            new AdditionalSurvivorSystem()
+            new AdditionalSurvivorSystem(),
+            new SurvivorInfoSystem()
         ]
     }
 };

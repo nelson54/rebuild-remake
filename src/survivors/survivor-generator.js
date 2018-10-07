@@ -22,6 +22,10 @@ function determineName(survivor) {
     survivor.lastName = pick(SURVIVOR_GENERATION_DATA.LAST_NAMES)
 }
 
+function determineSkinColor(survivor) {
+    survivor.fitzpatrickType = pick(SURVIVOR_GENERATION_DATA.FITZPATRICK_SCALE);
+}
+
 function determineSkills(survivor) {
     survivor.skills = {};
     survivor.experience = {};
@@ -32,15 +36,34 @@ function determineSkills(survivor) {
     });
 }
 
+function determineFace(survivor) {
+    let face = '';
+
+    if(survivor.gender === SURVIVOR_GENERATION_DATA.GENDER.MALE) {
+        face += pick(['boy', 'man']);
+    } else if(survivor.gender === SURVIVOR_GENERATION_DATA.GENDER.FEMALE) {
+        face += pick(['girl', 'woman']);
+    } else if(survivor.gender === SURVIVOR_GENERATION_DATA.GENDER.NONBINARY) {
+        face += pick(['boy', 'man','girl', 'woman']);
+    }
+
+    face += "-" + survivor.fitzpatrickType;
+
+    survivor.face = face;
+}
+
 function generateSurvivor() {
     let survivor = new Survivor();
+
     determineGender(survivor);
     determineName(survivor);
     determineSkills(survivor);
+    determineSkinColor(survivor);
+    determineFace(survivor);
 
     return survivor;
 }
 
 generateSurvivor.STARTING_SURVIVORS = SURVIVOR_GENERATION_DATA.STARTING_SURVIVORS;
 
-    module.exports = generateSurvivor;
+module.exports = generateSurvivor;

@@ -41,7 +41,15 @@
   "GENDER" : {
     "MALE" : "Male",
     "FEMALE" : "Female",
-    "NONBINARY": "Non-binary",
+    "NONBINARY": "Non-binary"
   },
+  "FITZPATRICK_SCALE": [
+    "type-1",
+    "type-2",
+    "type-3",
+    "type-4",
+    "type-5",
+    "type-6"
+  ],
   "SKILLS" : ["CONSTRUCTION", "DEFENSE", "SCAVENGING", "SCIENCE", "LEADERSHIP"]
 }

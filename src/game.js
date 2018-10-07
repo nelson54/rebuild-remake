@@ -29,6 +29,7 @@ class Game {
     constructor(width, height, tiles, systems = []) {
         this.sprites = [];
         this.survivors = [];
+        this.deadSurvivors = [];
         this.width = width;
         this.height = height;
         this.map = new Map(this, tiles);
