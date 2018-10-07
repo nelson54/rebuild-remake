@@ -3,6 +3,9 @@ const mapFactory = require('./map/map-factory').preConfiguredInstance();
 const Map = require('./map/map');
 const generateSurvivor = require('./survivors/survivor-generator');
 
+const STARTING_CONTENT = 80;
+const STARTING_FOOD_AMOUNT = 16 ;
+
 class Game {
 
     /**
@@ -37,6 +40,10 @@ class Game {
         this.turns = 0;
         this.renderer = new Renderer(this);
         this.rate = 1000 / 1;
+
+        this.food = STARTING_FOOD_AMOUNT;
+        this.content = STARTING_CONTENT;
+        this.deadSurvivors = [];
     }
 
     start() {

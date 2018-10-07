@@ -41,6 +41,9 @@ module.exports = class MacroDangerSystem extends SystemInterface {
         console.log(`Defense Rating: ${defenseValue}`);
         console.log(`Average Zombies: ${totalAverageZombies}`);
         console.log(`Macro Danger Rating: ${totalAverageZombies / defenseValue}`);
+        console.log(`Total Food: ${game.food}`);
+        console.log(`Total Living Survivors: ${game.survivors.length}`);
+        console.log(`Total Dead Survivors: ${game.deadSurvivors.length}`);
     }
 
     cleanup() {
