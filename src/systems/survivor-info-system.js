@@ -29,18 +29,21 @@ module.exports = class SurvivorInfoSystem extends SystemInterface {
 
     addGameInfo(game) {
 
-        let foodUsed = Math.floor(game.survivors.length);
+        let foodUsed = game.properties.foodDelta;
 
         let gameInfoInnerHtml = "" +
             `<div id="gameInfo">
                 <h3>Game Info</h3>
                 
                 <p><strong>Turn: </strong> ${game.turns}</p>
-                <p><strong>Food: </strong> ${game.food} (${(foodUsed > 0 ? '-' : '')}${foodUsed})</p>
+                <p><strong>Food: </strong> ${game.food} (${foodUsed})</p>
                 <p><strong>Defense from buildings: </strong> ${game.properties.buildingDefense}</p>
                 <p><strong>Defense from survivors: </strong> ${game.properties.survivorDefense}</p>
                 
                 <p><strong>Total Defense: </strong> ${game.properties.buildingDefense + game.properties.survivorDefense}</p>
+                
+                
+                <p><strong>Total Surrounding Zombies: </strong> ${game.properties.surroundingZombies}</p>
                 
                 <p><strong>Total Average Zombies: </strong> ${Number.parseFloat(game.properties.totalAverageZombies).toFixed(2)}</p>
                 <p><strong>Total Danger Rating: </strong> ${Number.parseFloat(game.properties.dangerRating * 100).toFixed(2)}%</p>
@@ -82,7 +85,7 @@ module.exports = class SurvivorInfoSystem extends SystemInterface {
     static survivorHtml(survivor) {
         return "" +
             `<li>
-                <img height="32" width="32" src="/4x-game-library/images/${survivor.face}.png"
+                <img height="32" width="32" src="/rebuild-remake/public/images/${survivor.face}.png"
                 <strong>${survivor.firstName} ${survivor.lastName}</strong>
             </li>
             `;

@@ -14,11 +14,13 @@ class Renderer {
         canvas.height = game.height;
         document.body.appendChild(canvas);
 
+        this.root = '/rebuild-remake/public';
+
         this.hasSupplyImage = new Image();
-        this.hasSupplyImage.src = `/4x-game-library/images/has-apple.png`;
+        this.hasSupplyImage.src = this.root + `/images/has-apple.png`;
 
         this.hasPeopleImage = new Image();
-        this.hasPeopleImage.src = `/4x-game-library/images/has-people.png`;
+        this.hasPeopleImage.src = this.root + `/images/has-people.png`;
 
         this.context = canvas.getContext('2d');
     }
@@ -55,7 +57,7 @@ class Renderer {
             if(building.redraw) {
                 building.isLoaded = false;
                 building.canvasImage = new Image();
-                building.canvasImage.src = `/4x-game-library/images/${building.image}.png`;
+                building.canvasImage.src = this.root +`/images/${building.image}.png`;
 
                 building.canvasImage.onload = ()=>{
                     building.isLoaded = true;

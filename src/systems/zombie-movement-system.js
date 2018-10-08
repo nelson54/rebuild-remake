@@ -14,11 +14,12 @@ module.exports = class ZombieMovementSystem extends SystemInterface {
     }
 
     processTile(tile) {
+        let seededRandom = tile.game.seededRandom;
         if(!tile.isCity && tile.properties.zombies > 0) {
             let target = this.getTargetTile(tile);
 
             if(!target.isCity) {
-                let movementAmount = Math.round(tile.properties.zombies * (MOVEMENT_RATE * Math.random()));
+                let movementAmount = Math.round(tile.properties.zombies * (MOVEMENT_RATE * seededRandom.random()));
 
                 tile.properties.zombies -= movementAmount;
                 target.properties.zombies += movementAmount;
@@ -35,7 +36,8 @@ module.exports = class ZombieMovementSystem extends SystemInterface {
     getDirectionToCity(tile) {
         let point = new Point(0, 0),
             distance = tile.game.map.randomCityTile.position
-                .subtract(tile.position);
+                .subtract(tile.position),
+            seededRandom = tile.game.seededRandom;
 
 
         if(distance.x > 0) {
@@ -51,7 +53,7 @@ module.exports = class ZombieMovementSystem extends SystemInterface {
         }
 
         if((point.x + point.y) === 2) {
-            if(Math.random() > .5) {
+            if(seededRandom.random() > .5) {
                 point.x = 0;
             } else {
                 point.y = 0;

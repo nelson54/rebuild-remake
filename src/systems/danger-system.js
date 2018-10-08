@@ -3,8 +3,8 @@ const SystemInterface = require('./system-interface');
 const FULL_DANGER_THRESHOLD = 30;
 
 module.exports = class DangerSystem extends SystemInterface {
-    constructor() {
-        super();
+    constructor(seededRandom) {
+        super(seededRandom);
         this.isGameSystem = false;
     }
 

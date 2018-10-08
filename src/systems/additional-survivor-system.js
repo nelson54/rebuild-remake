@@ -8,14 +8,12 @@ const SURVIVOR_SPAWN_RATE = .1;
  * @type {module.AdditionalSurvivorSystem}
  */
 module.exports = class AdditionalSurvivorSystem extends SystemInterface {
-    constructor() {
-        super();
-
-    }
 
     processGame(game) {
-        if(Math.random() < SURVIVOR_SPAWN_RATE) {
-            game.survivors.push(survivorGenerator())
+        let seededRandom = game.seededRandom;
+
+        if(seededRandom.random() < SURVIVOR_SPAWN_RATE) {
+            game.survivors.push(survivorGenerator(seededRandom))
         }
     }
 };

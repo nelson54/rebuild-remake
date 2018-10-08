@@ -21,20 +21,22 @@ module.exports = class FoodSystem extends SystemInterface {
     }
 
     processGame(game) {
-
+        let previousFoodAmount = game.food + 0;
         game.food -= Math.floor(game.survivors.length * .66);
 
         if(game.food <= 0) {
-            let starvationCount = Math.round(MAX_STARVATION * Math.random());
+            let starvationCount = Math.round(MAX_STARVATION * game.seededRandom.random());
 
             for (let i = 0; i < starvationCount; i++) {
-                game.survivors[Math.floor(game.survivors.length * Math.random())].isAlive = false;
+                game.survivors[Math.floor(game.survivors.length * game.seededRandom.random())].isAlive = false;
             }
 
             game.food = 0;
         }
 
         game.food += this.foodProduction;
+
+        game.properties.foodDelta = game.food - previousFoodAmount;
     }
 
     cleanup() {

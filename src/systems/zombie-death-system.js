@@ -12,8 +12,9 @@ module.exports = class ZombieDeathSystem extends SystemInterface {
     }
 
     processTile(tile) {
+        let game = tile.game;
         if(!tile.isCity && tile.properties.zombies > 0) {
-            let deathAmount = Math.round(tile.properties.zombies * (DEATH_RATE * Math.random()));
+            let deathAmount = Math.round(tile.properties.zombies * (DEATH_RATE * game.seededRandom.random()));
 
             tile.properties.zombies -= deathAmount;
         }

@@ -22,14 +22,23 @@ let buildingConstructors = [
 ];
 
 module.exports = class BuildingFactory {
+
+    /**
+     * @param {SeededRandom} seededRandom
+     */
+    constructor(seededRandom) {
+        this.seededRandom = seededRandom;
+    }
+
     pickConstructor() {
-        return buildingConstructors[Math.floor(buildingConstructors.length * Math.random())]
+        return buildingConstructors[Math.floor(buildingConstructors.length * this.seededRandom.random())]
     }
 
     /**
      * @param {Tile} tile
      */
-    createBuilding(tile) {
-        return new (this.pickConstructor())(tile);
+    createBuilding(tile, map) {
+        console.log('dog');
+        return new (this.pickConstructor())(tile, map);
     }
-}
+};

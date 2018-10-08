@@ -7,13 +7,13 @@ module.exports = class Tile {
     /**
      * @param {Game} game
      * @param {Point} position
-     * @param isSafe
-     * @param survivors
      */
-    constructor(game, position, isSafe=false, survivors = null) {
+    constructor(game, position, map) {
+        this.id = game.seededRandom.guid();
         this.game = game;
         this.position = position;
         this.properties = {zombies: STARTING_ZOMBIE_RATE};
+        this.map = map;
         this.isCity = false;
         this.isScouted = false;
     }

@@ -1,4 +1,5 @@
-const SystemInterface = require('./system-interface');
+const SystemInterface = require('./system-interface'),
+Map = require('../map/map');
 
 /**
  * Calculates the "Macro danger rating" which is the global chance of *something* bad happening. Eventually will work
@@ -14,34 +15,42 @@ const SystemInterface = require('./system-interface');
 
 const BASE_SURVIVOR_DEFENSE = 10;
 const BASE_BUILDING_DEFENSE = 20;
-const GLOBAL_DEFENSE_MULTIPLIER = 100;
+const GLOBAL_DEFENSE_MULTIPLIER = 10;
 
 module.exports = class MacroDangerSystem extends SystemInterface {
 
-    constructor() {
-        super();
+    constructor(seededRandom) {
+        super(seededRandom);
         this.cleanup();
     }
 
     processTile(tile) {
-        if(tile.properties.zombies > 0) {
-            ++this.unsafeTiles;
-        } else {
+        if(tile.isCity) {
             this.buildingDefense += BASE_BUILDING_DEFENSE;
             ++this.safeTiles;
         }
-
-        this.globalZombies += tile.properties.zombies;
     }
 
     processGame(game) {
+
+        let surroundingZombies = Map.findTilesAdjacentToCity(game.map)
+            .map(tile => {
+                return tile.properties.zombies;
+            })
+            .reduce((accumulator, zombies) => {
+                accumulator += zombies;
+                return accumulator;
+            }, 0);
+
         let averageZombies = this.globalZombies / this.unsafeTiles;
         let totalAverageZombies = averageZombies * this.unsafeTiles;
 
+
+        game.properties.surroundingZombies = surroundingZombies;
         game.properties.buildingDefense = (this.buildingDefense * GLOBAL_DEFENSE_MULTIPLIER) / this.safeTiles;
         game.properties.survivorDefense = (this.calculateSurvivorDefense(game)) / this.safeTiles;
         game.properties.totalAverageZombies = totalAverageZombies;
-        game.properties.dangerRating = totalAverageZombies / (game.properties.buildingDefense + game.properties.survivorDefense);
+        game.properties.dangerRating = surroundingZombies / (game.properties.buildingDefense + game.properties.survivorDefense);
     }
 
     cleanup() {

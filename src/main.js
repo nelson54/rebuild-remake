@@ -3,7 +3,7 @@ const Point = require('./point'),
     SystemLoader = require('./systems/system-loader');
 
 window.addEventListener('DOMContentLoaded', () => {
-    let game = Game.buildGame(800, 600, new Point(10, 10));
+    let game = Game.buildGame(800, 600, new Point(10, 10), 10);
 
     SystemLoader
         .create()

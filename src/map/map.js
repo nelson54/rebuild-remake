@@ -9,33 +9,26 @@ Point = require('../point');
 const EXTERNAL_SURVIVOR_RATE = .4,
     EXTERNAL_SUPPLY_RATE = .4;
 
-function shuffle(a) {
-    for (let i = a.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [a[i], a[j]] = [a[j], a[i]];
-    }
-    return a;
-}
-
-
-
 class Map {
 
     static buildTiles(game, width, height, map) {
-        let buildingFactory = new BuildingFactory();
-        let columns = [];
+        let seededRandom = game.seededRandom,
+            buildingFactory = new BuildingFactory(seededRandom),
+            columns = [],
+            tilesById = {};
+
         for(let x=0; x<width; x++) {
             let rows = [];
             for(let y=0; y<height; y++) {
                 let point = new Point(x, y),
-                tile = new Tile(game, point);
+                tile = new Tile(game, point, map);
                 tile.building = buildingFactory.createBuilding(tile, map);
-
-                if(Math.random() < EXTERNAL_SUPPLY_RATE) {
+                tilesById[tile.id] = tile;
+                if(seededRandom.random() < EXTERNAL_SUPPLY_RATE) {
                     tile.hasFood = true;
                 }
 
-                if(Math.random() < EXTERNAL_SURVIVOR_RATE) {
+                if(seededRandom.random() < EXTERNAL_SURVIVOR_RATE) {
                     tile.hasPeople = true;
                 }
 
@@ -43,6 +36,8 @@ class Map {
             }
             columns.push(rows);
         }
+
+        map.tilesById = tilesById;
 
         return columns;
     }
@@ -63,30 +58,66 @@ class Map {
         bottomLeft.building = new PoliceStation(bottomLeft);
         bottomRight.building = new House(bottomRight);
 
-        Map.prepareCityTile(topLeft, map);
-        Map.prepareCityTile(topRight, map);
-        Map.prepareCityTile(bottomLeft, map);
-        Map.prepareCityTile(bottomRight, map);
+        Map.prepareCityTile(topLeft);
+        Map.prepareCityTile(topRight);
+        Map.prepareCityTile(bottomLeft);
+        Map.prepareCityTile(bottomRight);
 
     }
 
-    static prepareCityTile(tile, map) {
+    static prepareCityTile(tile) {
         tile.isScouted = true;
         tile.isCity = true;
         tile.properties.zombies = 0;
         tile.hasPeople = 0;
         tile.hasGear = 0;
-        Map.scoutAdjacent(tile, map);
+        Map.scoutAdjacent(tile);
     }
 
-    static scoutAdjacent(tile, map) {
-        map.tiles[tile.x-1][tile.y-1].isScouted=true; //top Left
-        map.tiles[tile.x-1][tile.y].isScouted=true; //left
-        map.tiles[tile.x-1][tile.y+1].isScouted=true; //bottom Left
-        map.tiles[tile.x][tile.y-1].isScouted=true; //top
-        map.tiles[tile.x+1][tile.y-1].isScouted=true; //top Right
-        map.tiles[tile.x+1][tile.y].isScouted=true; //right
-        map.tiles[tile.x+1][tile.y+1].isScouted=true; //bottom Right
+    static scoutAdjacent(tile) {
+        Map.findAdjacent(tile).map((adjacentTile) => {
+            adjacentTile.isScouted = true;
+        })
+    }
+
+    static findTilesAdjacentToCity(map) {
+        let tilesById = map.filter((tile) => {
+            return tile.isCity
+        }).map((tile) => {
+            return Map.findAdjacent(tile)
+        }).reduce((accumulator, tiles) => {
+            return tiles.filter(tile => {
+                return !tile.isCity
+            }).reduce((accumulator, tile) => {
+                accumulator[tile.id] = tile;
+                return accumulator;
+            }, accumulator)
+        }, {});
+
+        return Object.values(tilesById) || []
+    }
+
+    static findAdjacent(tile) {
+        let map = tile.map;
+        let tiles = [];
+        Map.addMapIfTileExists(map, tile.x-1, tile.y-1, tiles); //top Left
+        Map.addMapIfTileExists(map, tile.x-1, tile.y, tiles);   //left
+        Map.addMapIfTileExists(map, tile.x-1, tile.y+1, tiles); //bottom Left
+
+        Map.addMapIfTileExists(map, tile.x, tile.y-1, tiles);   //top
+        Map.addMapIfTileExists(map, tile.x, tile.y+1, tiles);   //bottom
+
+        Map.addMapIfTileExists(map, tile.x+1, tile.y-1, tiles); //top Right
+        Map.addMapIfTileExists(map, tile.x+1, tile.y, tiles);   //right
+        Map.addMapIfTileExists(map, tile.x+1, tile.y+1, tiles); //bottom Right
+
+        return tiles;
+    }
+
+    static addMapIfTileExists(map, x, y, tiles) {
+        if (x>0 && y>0) {
+            tiles.push(map.get(x, y))
+        }
     }
 
     /**
@@ -158,7 +189,7 @@ class Map {
     get randomCityTile() {
         let cityTiles = this.cityTiles;
 
-        return cityTiles[Math.floor((cityTiles.length) * (Math.random()))];
+        return cityTiles[Math.floor((cityTiles.length) * (this.game.seededRandom.random()))];
     }
 
     get cityTiles() {

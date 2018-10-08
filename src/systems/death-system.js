@@ -10,10 +10,6 @@ const MAX_STARVATION = 3;
 
 module.exports = class DeathSystem extends SystemInterface {
 
-    constructor() {
-        super();
-    }
-
     processGame(game) {
         game.survivors = game.survivors.filter((survivor)=> {
             if(survivor.isAlive) {

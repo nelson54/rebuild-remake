@@ -14,8 +14,10 @@ module.exports = class SpawnSystem extends SystemInterface {
     }
 
     processTile(tile) {
+        let game = tile.game;
+
         if(tile.isEdge()) {
-            tile.properties.zombies += Math.floor(ZOMBIE_SPAWN_RATE * Math.random())
+            tile.properties.zombies += Math.floor(ZOMBIE_SPAWN_RATE * game.seededRandom.random())
         }
     }
 };
