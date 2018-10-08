@@ -1,5 +1,13 @@
 const Tile = require('./tile'),
+Apartment = require('./buildings/apartment'),
+PoliceStation = require('./buildings/police-station'),
+Farm = require('./buildings/farm'),
+House = require('./buildings/house'),
+BuildingFactory = require('./buildings/building-factory'),
 Point = require('../point');
+
+const EXTERNAL_SURVIVOR_RATE = .4,
+    EXTERNAL_SUPPLY_RATE = .4;
 
 function shuffle(a) {
     for (let i = a.length - 1; i > 0; i--) {
@@ -9,15 +17,29 @@ function shuffle(a) {
     return a;
 }
 
+
+
 class Map {
 
-    static buildTiles(game, width, height) {
+    static buildTiles(game, width, height, map) {
+        let buildingFactory = new BuildingFactory();
         let columns = [];
         for(let x=0; x<width; x++) {
             let rows = [];
             for(let y=0; y<height; y++) {
-                let point = new Point(x, y);
-                rows.push(new Tile(game, point))
+                let point = new Point(x, y),
+                tile = new Tile(game, point);
+                tile.building = buildingFactory.createBuilding(tile, map);
+
+                if(Math.random() < EXTERNAL_SUPPLY_RATE) {
+                    tile.hasFood = true;
+                }
+
+                if(Math.random() < EXTERNAL_SURVIVOR_RATE) {
+                    tile.hasPeople = true;
+                }
+
+                rows.push(tile)
             }
             columns.push(rows);
         }
@@ -36,18 +58,35 @@ class Map {
             bottomLeft = map.tiles[center.x-1][center.y],
             bottomRight = map.tiles[center.x][center.y];
 
-        topLeft.isCity = true;
-        topLeft.properties.zombies = 0;
+        topLeft.building = new Apartment(topLeft);
+        topRight.building = new Farm(topRight);
+        bottomLeft.building = new PoliceStation(bottomLeft);
+        bottomRight.building = new House(bottomRight);
 
-        topRight.isCity = true;
-        topRight.properties.zombies = 0;
+        Map.prepareCityTile(topLeft, map);
+        Map.prepareCityTile(topRight, map);
+        Map.prepareCityTile(bottomLeft, map);
+        Map.prepareCityTile(bottomRight, map);
 
-        bottomLeft.isCity = true;
-        bottomLeft.properties.zombies = 0;
+    }
 
-        bottomRight.isCity = true;
-        bottomRight.properties.zombies = 0;
+    static prepareCityTile(tile, map) {
+        tile.isScouted = true;
+        tile.isCity = true;
+        tile.properties.zombies = 0;
+        tile.hasPeople = 0;
+        tile.hasGear = 0;
+        Map.scoutAdjacent(tile, map);
+    }
 
+    static scoutAdjacent(tile, map) {
+        map.tiles[tile.x-1][tile.y-1].isScouted=true; //top Left
+        map.tiles[tile.x-1][tile.y].isScouted=true; //left
+        map.tiles[tile.x-1][tile.y+1].isScouted=true; //bottom Left
+        map.tiles[tile.x][tile.y-1].isScouted=true; //top
+        map.tiles[tile.x+1][tile.y-1].isScouted=true; //top Right
+        map.tiles[tile.x+1][tile.y].isScouted=true; //right
+        map.tiles[tile.x+1][tile.y+1].isScouted=true; //bottom Right
     }
 
     /**
@@ -57,7 +96,7 @@ class Map {
     constructor(game, size) {
         this.game = game;
         this.size = size;
-        this.tiles = Map.buildTiles(game, size.x, size.y);
+        this.tiles = Map.buildTiles(game, size.x, size.y, this);
 
         Map.addStartingCity(this);
     }

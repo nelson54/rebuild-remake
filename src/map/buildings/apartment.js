@@ -4,10 +4,10 @@ module.exports = class House extends BaseBuilding {
     constructor() {
         super();
 
-        this.image = 'house';
+        this.image = 'apartment';
     }
 
     get housing() {
-        return 1;
+        return 2;
     }
 };

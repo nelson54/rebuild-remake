@@ -1,7 +1,7 @@
 const SystemInterface = require('./system-interface');
 const survivorGenerator = require('../survivors/survivor-generator');
 
-const SURVIVOR_SPAWN_RATE = .15;
+const SURVIVOR_SPAWN_RATE = .1;
 
 /**
  * Automated survivor spawn when this system is running

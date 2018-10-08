@@ -1,19 +1,24 @@
 module.exports = class BaseBuilding {
-    constructor(tile, survivors, food) {
+    constructor(tile) {
         this.tile = tile;
-        this.survivors = survivors;
-        this.food = food;
+
+        this.image = 'unknown';
+        this.redraw = true;
     }
 
-    get additionalHousing() {
+    get housing() {
         return 0;
     }
 
-    get foodProduction() {
+    get food() {
         return 0;
     }
 
-    get security() {
+    get defense() {
         return 0;
     }
-};
+}
+
+
+
+;

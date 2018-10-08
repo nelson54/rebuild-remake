@@ -13,7 +13,7 @@ const SystemInterface = require('./system-interface');
  */
 
 const BASE_SURVIVOR_DEFENSE = 10;
-const BASE_BUILDING_DEFENSE = 10;
+const BASE_BUILDING_DEFENSE = 20;
 const GLOBAL_DEFENSE_MULTIPLIER = 100;
 
 module.exports = class MacroDangerSystem extends SystemInterface {
@@ -35,15 +35,13 @@ module.exports = class MacroDangerSystem extends SystemInterface {
     }
 
     processGame(game) {
-        let defenseValue = (this.calculateDefense(game) * GLOBAL_DEFENSE_MULTIPLIER) / this.safeTiles;
         let averageZombies = this.globalZombies / this.unsafeTiles;
         let totalAverageZombies = averageZombies * this.unsafeTiles;
-        console.log(`Defense Rating: ${defenseValue}`);
-        console.log(`Average Zombies: ${totalAverageZombies}`);
-        console.log(`Macro Danger Rating: ${totalAverageZombies / defenseValue}`);
-        console.log(`Total Food: ${game.food}`);
-        console.log(`Total Living Survivors: ${game.survivors.length}`);
-        console.log(`Total Dead Survivors: ${game.deadSurvivors.length}`);
+
+        game.properties.buildingDefense = (this.buildingDefense * GLOBAL_DEFENSE_MULTIPLIER) / this.safeTiles;
+        game.properties.survivorDefense = (this.calculateSurvivorDefense(game)) / this.safeTiles;
+        game.properties.totalAverageZombies = totalAverageZombies;
+        game.properties.dangerRating = totalAverageZombies / (game.properties.buildingDefense + game.properties.survivorDefense);
     }
 
     cleanup() {
@@ -53,8 +51,8 @@ module.exports = class MacroDangerSystem extends SystemInterface {
         this.globalZombies = 0;
     }
 
-    calculateDefense(game) {
-        let defense = this.buildingDefense;
+    calculateSurvivorDefense(game) {
+        let defense = 0;
 
         game.survivors.forEach((survivor) => {
             let survivorDefense = BASE_SURVIVOR_DEFENSE;

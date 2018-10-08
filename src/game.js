@@ -4,7 +4,7 @@ const Map = require('./map/map');
 const generateSurvivor = require('./survivors/survivor-generator');
 
 const STARTING_CONTENT = 80;
-const STARTING_FOOD_AMOUNT = 16 ;
+const STARTING_FOOD_AMOUNT = 15 ;
 
 class Game {
 
@@ -44,6 +44,8 @@ class Game {
         this.food = STARTING_FOOD_AMOUNT;
         this.content = STARTING_CONTENT;
         this.deadSurvivors = [];
+
+        this.properties = {};
     }
 
     start() {
@@ -68,7 +70,6 @@ class Game {
 
     tick(rate) {
         this.systems.forEach((system) => {
-
             this.map.forEach((tile) => {
                 if(system.isTileSystem) {
                     system.processTile(tile);
@@ -83,17 +84,6 @@ class Game {
         });
 
         this.renderer.drawScene();
-    }
-
-    checkForLevelUp(survivor) {
-        Math.ceil()
-    }
-
-    /**
-     * @param {Sprite} sprite
-     */
-    addSprite(sprite) {
-        this.sprites.push(sprite);
     }
 
     addSystem(system) {

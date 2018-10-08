@@ -1,8 +1,10 @@
 const BaseBuilding = require('./base-building');
 
-module.exports = class GasStation extends BaseBuilding {
+module.exports = class Bank extends BaseBuilding {
+
     constructor() {
         super();
-        this.image = 'gas-station';
+
+        this.image = 'bank';
     }
 };

@@ -5,18 +5,24 @@ const SystemInterface = require('./system-interface');
  *
  * @type {module.SkillSystem}
  */
-const FOOD_REGENERATION = 5;
-const MAX_STARVATION = 3;
+const MAX_STARVATION = 2;
 
 module.exports = class FoodSystem extends SystemInterface {
 
     constructor() {
         super();
+        this.cleanup();
+    }
+
+    processTile(tile) {
+        if(tile.isCity) {
+            this.foodProduction += tile.food;
+        }
     }
 
     processGame(game) {
 
-        game.food -= game.survivors.length;
+        game.food -= Math.floor(game.survivors.length * .66);
 
         if(game.food <= 0) {
             let starvationCount = Math.round(MAX_STARVATION * Math.random());
@@ -28,6 +34,10 @@ module.exports = class FoodSystem extends SystemInterface {
             game.food = 0;
         }
 
-        game.food += FOOD_REGENERATION;
+        game.food += this.foodProduction;
+    }
+
+    cleanup() {
+        this.foodProduction = 0;
     }
 };

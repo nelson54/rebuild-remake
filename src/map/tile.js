@@ -15,6 +15,7 @@ module.exports = class Tile {
         this.position = position;
         this.properties = {zombies: STARTING_ZOMBIE_RATE};
         this.isCity = false;
+        this.isScouted = false;
     }
 
     get x() {
@@ -31,6 +32,10 @@ module.exports = class Tile {
 
     set y(y) {
         this.position.y = y;
+    }
+
+    get food() {
+        return this.building.food;
     }
 
     setBuilding(building) {
