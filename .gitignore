@@ -1,3 +1,4 @@
 # Created by .ignore support plugin (hsz.mobi)
-public/js/bundle.js
-4x-game-library.iml
+node_modules
+.idea
+*.iml
